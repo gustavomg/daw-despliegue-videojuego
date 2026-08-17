@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Arena Royale</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>⚔️ Arena Royale</h1>
+    <div class="header-right">
+      <span id="instancia-badge" class="instancia-badge" title="Instancia del backend que atiende esta conexión WebSocket"></span>
+      <span id="jugador-actual"></span>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- ---------- Pantalla de login ---------- -->
+    <section id="screen-login" class="screen">
+      <form id="login-form" class="card">
+        <h2>Entra en la arena</h2>
+        <p class="subtitle">Elige un nombre de jugador para empezar a jugar</p>
+        <label for="nombre">Nombre de jugador</label>
+        <input type="text" id="nombre" maxlength="24" minlength="2" autocomplete="off" placeholder="p.ej. Rayo23" required />
+        <button type="submit">Entrar</button>
+        <div class="error-msg" id="login-error"></div>
+      </form>
+    </section>
+
+    <!-- ---------- Sala de espera / lobby ---------- -->
+    <section id="screen-lobby" class="screen hidden">
+      <div class="card">
+        <h2>Sala de espera</h2>
+        <p id="lobby-estado" class="estado-texto">Pulsa "Buscar partida" cuando quieras jugar.</p>
+        <button id="btn-buscar-partida">Buscar partida</button>
+        <div class="hint">
+          Minijuego <strong>Reflex Tap</strong>: cuando empiece la ronda, pulsa el botón tan rápido
+          como puedas. Gana quien más clics consiga antes de que se acabe el tiempo.
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- Pantalla de partida ---------- -->
+    <section id="screen-game" class="screen hidden">
+      <div class="card game-card">
+        <h2>Partida contra <span id="oponente-nombre">?</span></h2>
+        <div class="timer-bar-wrap">
+          <div id="timer-bar" class="timer-bar"></div>
+        </div>
+        <p id="game-estado" class="estado-texto">Preparados...</p>
+        <button id="btn-tap" disabled>¡AHORA!</button>
+        <div class="marcador">
+          <span>Tus clics: <strong id="mis-clics">0</strong></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- Pantalla de resultado ---------- -->
+    <section id="screen-result" class="screen hidden">
+      <div class="card">
+        <h2 id="resultado-titulo">Resultado</h2>
+        <table class="tabla-resultado" id="tabla-resultado">
+          <thead>
+            <tr><th>Jugador</th><th>Clics</th><th>Puntos</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <button id="btn-volver-lobby">Volver a la sala de espera</button>
+      </div>
+    </section>
+
+    <!-- ---------- Leaderboard, siempre visible tras el login ---------- -->
+    <aside id="leaderboard-panel" class="leaderboard-panel hidden">
+      <h2>🏆 Leaderboard global</h2>
+      <table class="tabla-leaderboard" id="tabla-leaderboard">
+        <thead>
+          <tr><th>#</th><th>Jugador</th><th>Puntos</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <p class="hint-small" id="leaderboard-origen"></p>
+    </aside>
+
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

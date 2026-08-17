@@ -1,0 +1,169 @@
+:root {
+  --morado: #7c3aed;
+  --morado-osc: #4c1d95;
+  --verde: #16a34a;
+  --naranja: #ea580c;
+  --rojo: #dc2626;
+  --gris-fondo: #0f172a;
+  --gris-panel: #1e293b;
+  --gris-borde: #334155;
+  --texto: #f1f5f9;
+  --texto-tenue: #94a3b8;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--gris-fondo);
+  color: var(--texto);
+}
+
+/* ---------- Cabecera ---------- */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .7rem 1.2rem;
+  background: var(--morado-osc);
+  color: #fff;
+}
+
+.app-header h1 { font-size: 1.15rem; margin: 0; }
+
+.header-right { display: flex; align-items: center; gap: .8rem; font-size: .8rem; }
+
+.instancia-badge {
+  background: rgba(255,255,255,.15);
+  padding: .2rem .55rem;
+  border-radius: 999px;
+  font-family: monospace;
+}
+
+/* ---------- Layout general ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.2rem;
+  padding: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.screen.hidden { display: none; }
+
+.card {
+  background: var(--gris-panel);
+  border: 1px solid var(--gris-borde);
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 480px;
+  margin: 2rem auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,.3);
+}
+
+.card h2 { margin-top: 0; color: #fff; }
+
+.subtitle { color: var(--texto-tenue); font-size: .85rem; margin-top: -.5rem; }
+
+label { display: block; font-size: .8rem; font-weight: 600; margin: 1rem 0 .3rem; }
+
+input[type="text"] {
+  width: 100%;
+  padding: .6rem .7rem;
+  border: 1px solid var(--gris-borde);
+  border-radius: 6px;
+  background: #0b1220;
+  color: var(--texto);
+  font-size: 1rem;
+}
+
+button {
+  margin-top: 1.25rem;
+  width: 100%;
+  padding: .7rem;
+  background: var(--morado);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s;
+}
+button:hover:not(:disabled) { background: var(--morado-osc); }
+button:disabled { background: #475569; cursor: not-allowed; }
+
+.error-msg { margin-top: .75rem; color: #f87171; font-size: .85rem; min-height: 1.1rem; }
+
+.hint {
+  margin-top: 1.25rem;
+  font-size: .78rem;
+  color: var(--texto-tenue);
+  border-top: 1px dashed var(--gris-borde);
+  padding-top: .75rem;
+}
+
+.estado-texto { color: var(--texto-tenue); font-size: .9rem; }
+
+/* ---------- Partida ---------- */
+.game-card { text-align: center; }
+
+.timer-bar-wrap {
+  height: 14px;
+  border-radius: 999px;
+  background: #0b1220;
+  overflow: hidden;
+  margin: 1rem 0;
+  border: 1px solid var(--gris-borde);
+}
+
+.timer-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--verde), var(--naranja));
+  transition: width .1s linear;
+}
+
+#btn-tap {
+  font-size: 1.4rem;
+  padding: 1.5rem;
+  background: var(--naranja);
+}
+#btn-tap:hover:not(:disabled) { background: #c2410c; }
+
+.marcador { margin-top: 1rem; font-size: 1.1rem; }
+
+/* ---------- Resultado ---------- */
+.tabla-resultado, .tabla-leaderboard {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: .9rem;
+}
+.tabla-resultado th, .tabla-resultado td,
+.tabla-leaderboard th, .tabla-leaderboard td {
+  padding: .45rem .5rem;
+  border-bottom: 1px solid var(--gris-borde);
+  text-align: left;
+}
+.tabla-resultado th, .tabla-leaderboard th { color: var(--texto-tenue); font-weight: 600; }
+
+/* ---------- Leaderboard lateral ---------- */
+.leaderboard-panel {
+  background: var(--gris-panel);
+  border: 1px solid var(--gris-borde);
+  border-radius: 12px;
+  padding: 1.2rem;
+  align-self: start;
+  height: fit-content;
+}
+.leaderboard-panel.hidden { display: none; }
+.leaderboard-panel h2 { font-size: 1rem; margin-top: 0; }
+
+.hint-small { font-size: .7rem; color: var(--texto-tenue); margin-top: .6rem; }
+
+@media (max-width: 800px) {
+  .layout { grid-template-columns: 1fr; }
+}

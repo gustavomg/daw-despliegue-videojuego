@@ -1,0 +1,95 @@
+# Orquestación de "Arena Royale": plataforma de videojuego multijugador ligero (lobby +
+# matchmaking + minijuego por rondas + leaderboard en vivo).
+# Servicios: db (Postgres), redis (cola de matchmaking + leaderboard + pub/sub), backend
+# (API REST + WebSocket), nginx (frontend estático + proxy inverso).
+#
+# Uso:
+#   cp .env.example .env      # y ajusta los valores (sobre todo JWT_SECRET)
+#   docker compose up -d --build
+#   docker compose ps
+#   docker compose logs -f backend
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${PGUSER:-arena}
+      POSTGRES_PASSWORD: ${PGPASSWORD:-arena}
+      POSTGRES_DB: ${PGDATABASE:-arena_royale}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER:-arena}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [arena_net]
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks: [arena_net]
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      # OJO: sin valor por defecto a propósito. Si JWT_SECRET no está definido en .env, el
+      # backend falla rápido al arrancar (ver backend/src/config.js y la Guía de Despliegue,
+      # sección "Diagnóstico de errores").
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-12h}
+      ROUND_DURATION_MS: ${ROUND_DURATION_MS:-8000}
+      MATCHMAKER_INTERVAL_MS: ${MATCHMAKER_INTERVAL_MS:-1500}
+      PGHOST: db
+      PGPORT: 5432
+      PGUSER: ${PGUSER:-arena}
+      PGPASSWORD: ${PGPASSWORD:-arena}
+      PGDATABASE: ${PGDATABASE:-arena_royale}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks: [arena_net]
+    # Ejercicio "límites de recursos" (ver Guía de Despliegue): descomenta y ajusta estos
+    # valores para observar el comportamiento del backend bajo carga con recursos acotados.
+    # mem_limit: 256m
+    # cpus: 0.5
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-80}:80"
+    depends_on:
+      backend:
+        condition: service_started
+    networks: [arena_net]
+
+networks:
+  arena_net:
+    driver: bridge
+
+volumes:
+  db_data:

@@ -1,0 +1,22 @@
+{
+  "name": "arena-royale-backend",
+  "version": "1.0.0",
+  "description": "Backend de lobby, matchmaking y minijuego por rondas de Arena Royale (proyecto práctico del módulo de Despliegue de Aplicaciones Web)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "ioredis": "^5.4.2",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.22.0",
+    "socket.io": "^4.8.3"
+  }
+}
