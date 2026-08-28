@@ -19,7 +19,7 @@ si lo que quieres es desplegar la aplicación y hacer los ejercicios ya mismo.
 
 ```
                          ┌───────────────────────────┐
-   navegador  ───────▶   │   nginx (puerto 80)       │
+   navegador  ───────▶   │   nginx (puerto 8080)     │
                          │   - sirve frontend/        │
                          │   - proxy /api/            │
                          │   - proxy /socket.io/      │
@@ -57,7 +57,7 @@ retransmite por WebSocket a todos los clientes conectados.
 | `db`     | `postgres:16-alpine`| Persistencia de jugadores, partidas y puntuaciones | (interno) 5432   |
 | `redis`  | `redis:7-alpine`    | Cola de matchmaking, leaderboard en vivo, pub/sub | (interno) 6379   |
 | `backend`| Node 22 (`node:22-alpine`) | API REST + WebSocket (Express + Socket.IO)   | (interno) 3000   |
-| `nginx`  | `nginx:1.27-alpine` | Frontend estático + proxy inverso                | `HTTP_PORT` (80) |
+| `nginx`  | `nginx:1.27-alpine` | Frontend estático + proxy inverso                | `HTTP_PORT` (8080) |
 
 ## Arranque rápido
 
@@ -67,7 +67,7 @@ docker compose up -d --build
 docker compose ps
 ```
 
-Abre `http://localhost/`, elige un nombre de jugador y pulsa "Buscar partida" (necesitas dos
+Abre `http://localhost:8080/`, elige un nombre de jugador y pulsa "Buscar partida" (necesitas dos
 pestañas/navegadores distintos para emparejar).
 
 ## Estructura del repositorio
